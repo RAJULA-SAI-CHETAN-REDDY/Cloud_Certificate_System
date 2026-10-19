@@ -1,0 +1,83 @@
+name: Deploy development environment
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Preview a plan or apply it to the existing development environment"
+        required: true
+        type: choice
+        options: [plan, apply]
+      confirmation:
+        description: "For apply, type DEPLOY; leave empty for plan"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: ccd-development-deployment
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: development
+    env:
+      TF_IN_AUTOMATION: 'true'
+      TF_VAR_admin_organizations: ${{ secrets.ADMIN_ORGANIZATIONS_JSON }}
+      TF_VAR_notification_email: ${{ secrets.NOTIFICATION_EMAIL }}
+      TF_VAR_notification_email_enabled: 'true'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: '1.16.0'
+          terraform_wrapper: false
+
+      - name: Check deployment inputs
+        env:
+          DEPLOY_MODE: ${{ inputs.mode }}
+          DEPLOY_CONFIRMATION: ${{ inputs.confirmation }}
+        run: python scripts/check_deployment_inputs.py
+      - uses: aws-actions/configure-aws-credentials@v6.3.0
+        with:
+          role-to-assume: arn:aws:iam::707256068320:role/ccd-github-deploy
+          aws-region: ap-south-1
+          allowed-account-ids: '707256068320'
+          role-session-name: ccd-github-${{ github.run_id }}
+
+      - name: Install and build deployment files
+        run: |
+          python backend/package_verification.py
+          python backend/package_issuance.py
+          npm ci --prefix frontend --ignore-scripts
+          npm run build --prefix frontend
+
+      - name: Initialize existing remote state
+        run: terraform -chdir=infrastructure init -input=false -lockfile=readonly
+      - name: Confirm existing state
+        run: |
+          mkdir -p tmp
+          terraform -chdir=infrastructure state list > tmp/state-addresses.txt
+          python scripts/check_deployment_state.py tmp/state-addresses.txt
+      - name: Plan and check changes
+        run: |
+          terraform -chdir=infrastructure plan -input=false -out=../tmp/github-deployment.tfplan
+          terraform -chdir=infrastructure show -json ../tmp/github-deployment.tfplan > tmp/github-deployment.json
+          python scripts/check_deployment_plan.py tmp/github-deployment.json
+      - name: Apply the reviewed plan
+        if: inputs.mode == 'apply'
+        run: terraform -chdir=infrastructure apply -input=false ../tmp/github-deployment.tfplan

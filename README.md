@@ -73,9 +73,16 @@ aws sts get-caller-identity --profile ccd --query Arn --output text
 The ARN must end in `user/ccd-developer`. Keep credentials and login codes out
 of Git and chat.
 
-This repository does **not** contain Terraform state. On a fresh computer,
-securely recover the existing state or reconcile/import the existing AWS
-resources before any apply. `terraform init` by itself does not recover state.
+The existing Terraform state has been migrated to a private, versioned S3
+backend, and a GitHub deployment identity has been created. GitHub deployment
+remains inactive until its private environment secrets are set and the
+deployment workflow is merged. Follow [the GitHub deployment guide](docs/GITHUB_DEPLOYMENT.md)
+in order. Do not trigger an apply against an empty or unverified state.
+
+This repository does **not** contain Terraform state. Once this deployment
+change is merged, a fresh clone should initialize the configured S3 backend
+and verify the existing state before any apply. Do not recreate the deployed
+resources from an empty state.
 Never use a fresh state to recreate the deployed certificate store or website.
 
 The real administrator subject-to-organization assignments are kept in the

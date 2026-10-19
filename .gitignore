@@ -11,6 +11,7 @@ tmp/
 *.tfstate.*
 *.tfplan
 *.tfvars
+infrastructure/bootstrap/backend.tf
 !.terraform.lock.hcl
 
 # Machine-specific project instructions, AWS history, and completed migration.
