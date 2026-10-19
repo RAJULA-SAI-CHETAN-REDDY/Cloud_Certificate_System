@@ -1,0 +1,77 @@
+:root { color-scheme: light; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #24312d; background: #f7f8fa; }
+* { box-sizing: border-box; letter-spacing: 0; }
+body { margin: 0; }
+header { max-width: 1120px; margin: auto; padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #dce1e6; gap: 20px; }
+a { color: #255c8a; text-decoration: none; }
+header a:first-child { font-weight: 750; color: #24312d; }
+header a:last-child { font-size: 14px; }
+main { max-width: 800px; margin: auto; padding: 56px 32px; }
+.eyebrow { font-size: 12px; font-weight: 700; color: #596b77; }
+h1 { font-size: 30px; line-height: 1.25; margin: 12px 0 32px; overflow-wrap: anywhere; }
+section { padding: 28px 0; border-top: 1px solid #dce1e6; border-bottom: 1px solid #dce1e6; }
+.badge { display: inline-block; border-radius: 4px; padding: 6px 10px; font-size: 12px; font-weight: 700; background: #e8edf1; }
+.badge[data-status="success"] { color: #166242; background: #e0f3e8; }
+.badge[data-status="error"] { color: #a13535; background: #fbe9e9; }
+h2 { font-size: 22px; margin: 20px 0 12px; }
+p { line-height: 1.6; }
+#session-message { color: #596571; min-height: 26px; }
+dl { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 14px; margin: 28px 0; font-size: 14px; }
+dt { color: #596571; } dd { margin: 0; overflow-wrap: anywhere; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+button { min-height: 44px; min-width: 116px; background: #23654d; color: white; border: 1px solid #23654d; border-radius: 6px; padding: 12px 20px; font: inherit; font-size: 14px; font-weight: 650; cursor: pointer; }
+button.secondary { color: #24312d; background: white; border-color: #b3bdc5; }
+button:disabled { opacity: .6; cursor: wait; }
+button:focus-visible, a:focus-visible { outline: 3px solid #548eae; outline-offset: 3px; }
+[hidden] { display: none !important; }
+footer { padding: 24px; text-align: center; color: #677984; font-size: 12px; }
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.form-grid label { font-size: 14px; font-weight: 650; }
+.full-width { grid-column: 1 / -1; }
+input { display: block; width: 100%; min-width: 0; min-height: 44px; margin-top: 8px; padding: 10px 12px; border: 1px solid #a9b9c1; border-radius: 6px; font: inherit; font-weight: 400; }
+input:focus-visible { outline: 3px solid #548eae; outline-offset: 3px; }
+#issued-certificate .actions a { padding: 12px 0; }
+#issuance-message { overflow-wrap: anywhere; }
+@media (max-width: 600px) { .form-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 600px) { header { padding: 20px; flex-wrap: wrap; } main { padding: 36px 20px; } h1 { font-size: 28px; } dl { grid-template-columns: 1fr; gap: 6px; } dd { margin-bottom: 12px; } }
+
+#certificate-list article { padding: 20px 0; border-bottom: 1px solid #dce1e6; overflow-wrap: anywhere; }
+
+.intro, .hint { color: #596b77; line-height: 1.6; }
+.hint { font-size: 13px; }
+.filter-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin: 24px 0 12px; }
+.filter-grid label { font-size: 13px; font-weight: 650; }
+select { display: block; width: 100%; min-height: 44px; margin-top: 8px; padding: 10px; border: 1px solid #a9b9c1; border-radius: 6px; background: white; font: inherit; }
+select:focus-visible { outline: 3px solid #548eae; outline-offset: 3px; }
+#certificate-list .certificate-card { background: white; border: 1px solid #dce1e6; border-radius: 10px; padding: 24px; margin: 20px 0; }
+.certificate-card h3 { margin: 14px 0 6px; font-size: 20px; }
+.certificate-card .certificate-id { color: #596b77; font-size: 13px; overflow-wrap: anywhere; }
+.certificate-card dl { margin: 20px 0; }
+.certificate-card .actions { align-items: center; justify-content: space-between; }
+button.danger { color: #a13535; border-color: #d8b8b8; }
+.badge[data-status="ACTIVE"] { color: #166242; background: #e0f3e8; }
+.badge[data-status="REVOKED"] { color: #a13535; background: #fbe9e9; }
+.badge[data-status="EXPIRED"], .badge[data-status="NOT_YET_VALID"] { color: #795114; background: #fff1d7; }
+@media (max-width: 650px) { .filter-grid { grid-template-columns: 1fr; } #certificate-list .certificate-card { padding: 18px; } }
+.workspace-navigation { display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0; }
+.workspace-navigation a { background: white; border: 1px solid #b3bdc5; padding: 12px 18px; border-radius: 7px; font-weight: 650; }
+section[id] { scroll-margin-top: 16px; }
+main { max-width: 1180px; }
+.filter-grid { grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr)); }
+.filter-actions { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; }
+.filter-actions label { display: flex; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; }
+.filter-actions input { width: 18px; min-height: 18px; height: 18px; margin: 0; accent-color: #23654d; }
+#certificate-list .certificate-card { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
+.organization-column { border-left: 1px solid #e3e8ec; padding-left: 20px; }
+.column-label { color: #596571; font-size: 12px; font-weight: 650; margin: 0 0 12px; }
+.certificate-card dl { grid-template-columns: 1fr; gap: 6px; margin: 0; align-content: start; }
+.certificate-card dd { margin-bottom: 8px; }
+.certificate-card .actions { grid-column: 1 / -1; border-top: 1px solid #e3e8ec; padding-top: 16px; margin-top: 0; }
+.certificate-card > .hint { grid-column: 1 / -1; margin: 0; }
+.copy-id { min-width: 0; min-height: 32px; padding: 5px 10px; font-size: 12px; }
+.expiry-warning { display: inline-block; margin: 4px 0; padding: 6px 10px; border-radius: 5px; color: #795114; background: #fff1d7; font-size: 12px; font-weight: 700; }
+@media (max-width: 850px) { .filter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 650px) {
+  .filter-grid, #certificate-list .certificate-card { grid-template-columns: 1fr; }
+  .organization-column { border-left: 0; border-top: 1px solid #e3e8ec; padding: 16px 0 0; }
+  .certificate-card dl { grid-template-columns: 110px minmax(0, 1fr); }
+}

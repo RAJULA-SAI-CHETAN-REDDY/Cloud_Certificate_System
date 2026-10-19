@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verify a certificate | Certificate Registry</title>
+  <link rel="stylesheet" href="./css/verify.css">
+  <link rel="stylesheet" href="./css/navigation.css">
+  <script src="./js/config.js" defer></script>
+  <script src="./js/verify.js" defer></script>
+  <script src="./js/scan.js" defer></script>
+</head>
+<body>
+  <header><a href="./index.html">Certificate Registry</a><nav aria-label="Main navigation"><a href="./index.html">Home</a><a href="./verify.html" aria-current="page">Public verification</a><a href="./admin.html">Administrator</a></nav></header>
+  <main>
+    <p class="eyebrow">PUBLIC VERIFICATION</p>
+    <h1>A certificate.<br>A clear answer.</h1>
+    <p class="intro">Check the recipient, issuing organization, and current status using the ID printed on a certificate. No sign-in required.</p>
+    <section class="card" aria-label="Certificate lookup">
+      <form id="verify-form">
+        <label for="certificate-id">Certificate ID</label>
+        <div class="input-row">
+          <input id="certificate-id" name="id" placeholder="CERT-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" maxlength="41" required autocomplete="off" spellcheck="false">
+          <button id="verify-button" type="submit">Verify certificate</button>
+        </div>
+        <p class="hint">Copy the full ID, including CERT- and the hyphens.</p>
+      </form>
+      <div id="result" role="status" aria-live="polite" aria-atomic="true" hidden>
+        <span id="status-label" class="badge"></span>
+        <h2 id="result-title"></h2>
+        <p id="result-message"></p>
+        <dl id="details" hidden></dl>
+      </div>
+    </section>
+    <section class="card" aria-labelledby="scan-title">
+      <h2 id="scan-title">Check a certificate file</h2>
+      <p class="hint">Choose an issued PDF, or an image with its QR code. The file stays in your browser; only the certificate ID and a PDF fingerprint are checked.</p>
+      <form id="scan-form">
+        <label for="scan-file">Certificate PDF or image</label>
+        <input id="scan-file" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp" required>
+        <button id="scan-button" type="submit">Check file</button>
+      </form>
+      <p id="scan-result" role="status" aria-live="polite"></p>
+    </section>
+    <p class="footnote">An ID or QR code proves only that a record exists. An exact PDF match also checks that the uploaded PDF has the same bytes as the issued original. An image cannot prove the original PDF's integrity.</p>
+  </main>
+  <footer>Cloud-Based Digital Certificate Issuance and Verification System</footer>
+</body>
+</html>

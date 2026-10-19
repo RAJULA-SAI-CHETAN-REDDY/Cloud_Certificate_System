@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Administrator | Certificate Registry</title>
+  <link rel="stylesheet" href="./css/admin.css">
+  <link rel="stylesheet" href="./css/navigation.css">
+  <script src="./js/admin-config.js" defer></script>
+  <script src="./js/admin.js" defer></script>
+</head>
+<body>
+  <header><a href="./index.html">Certificate Registry</a><nav aria-label="Main navigation"><a href="./index.html">Home</a><a href="./verify.html">Public verification</a><a href="./admin.html" aria-current="page">Administrator</a></nav></header>
+  <main>
+    <p class="eyebrow">ADMINISTRATION</p>
+    <h1>Administrator access</h1>
+    <p class="intro">Sign in, check your access, then find or issue certificates.</p>
+    <section aria-label="Administrator session">
+      <span id="session-status" class="badge">Checking session</span>
+      <h2 id="session-title">Connecting</h2>
+      <p id="session-message" role="status" aria-live="polite">Checking your sign-in status.</p>
+      <dl id="session-details" hidden>
+        <dt>Email</dt><dd id="session-email"></dd>
+        <dt>Role</dt><dd>Administrator</dd>
+        <dt>Organization</dt><dd id="session-organization">Check access to load your assignment</dd>
+        <dt>Session expires</dt><dd id="session-expiry"></dd>
+      </dl>
+      <div class="actions">
+        <button id="sign-in" type="button" disabled>Sign in</button>
+        <button id="sign-out" class="secondary" type="button" hidden>Sign out</button>
+        <button id="check-access" class="secondary" type="button" hidden>Check access</button>
+      </div>
+      <p id="backend-status" role="status" aria-live="polite" hidden></p>
+    </section>
+    <nav id="workspace-navigation" class="workspace-navigation" aria-label="Workspace" hidden><a href="#management-section">Manage certificates</a><a href="#issuance-section">Issue a certificate</a></nav>
+    <section id="management-section" aria-labelledby="management-title" hidden>
+      <h2 id="management-title">Manage certificates</h2>
+      <p>Find a certificate by recipient, ID, course or organization.</p>
+      <div class="filter-grid">
+        <label for="certificate-search">Search certificates<input id="certificate-search" type="search" placeholder="Name, certificate ID, course..." maxlength="120" autocomplete="off"></label>
+        <label for="certificate-status">Status<select id="certificate-status"><option value="">All statuses</option><option value="ACTIVE">Active</option><option value="EXPIRED">Expired</option><option value="REVOKED">Revoked</option><option value="NOT_YET_VALID">Not yet valid</option></select></label>
+        <label for="certificate-organization">Organization<select id="certificate-organization"><option value="">All organizations</option></select></label>
+        <label for="certificate-sort">Sort by<select id="certificate-sort"><option value="newest">Newest issue date</option><option value="oldest">Oldest issue date</option><option value="recipient">Recipient name</option></select></label>
+      </div>
+      <div class="filter-actions"><label><input id="manageable-only" type="checkbox"> Only certificates I can manage</label><button id="clear-filters" class="secondary" type="button">Clear filters</button></div>
+      <p id="list-summary" class="hint" role="status" aria-live="polite">Load certificates to begin.</p>
+      <button id="refresh-certificates" type="button">Load certificates</button>
+      <p id="management-message" role="status" aria-live="polite"></p>
+      <div id="certificate-list"></div>
+      <p id="no-matches" hidden>No certificates match these filters. Try another search or clear the filters.</p>
+      <button id="next-certificates" type="button" class="secondary" hidden>Load more</button>
+    </section>
+    <section id="issuance-section" aria-labelledby="issuance-title" hidden>
+      <h2 id="issuance-title">Issue a certificate</h2>
+      <form id="issuance-form">
+        <div class="form-grid">
+          <label>Recipient<input name="recipient_name" required maxlength="120" autocomplete="off"></label>
+          <label>Course<input name="course_name" required maxlength="120" autocomplete="off"></label>
+          <label class="full-width">Issuing organization<input name="organization" required maxlength="120" readonly aria-describedby="organization-help"></label>
+          <label>Issue date<input name="issue_date" type="date" required></label>
+          <label>Expiry date<input name="expiry_date" type="date" required></label>
+        </div>
+        <p id="organization-help" class="hint">Your organization is assigned by the account owner and cannot be changed here.</p>
+        <div class="actions"><button id="issue-button" type="submit">Issue certificate</button></div>
+      </form>
+      <p id="issuance-message" role="status" aria-live="polite"></p>
+      <div id="issued-certificate" hidden>
+        <dl><dt>Certificate ID</dt><dd id="issued-id"></dd></dl>
+        <div class="actions"><a id="issued-download" rel="noreferrer noopener" target="_blank">Download PDF</a><a id="issued-verify" rel="noreferrer noopener" target="_blank">Verify certificate</a></div>
+      </div>
+    </section>
+  </main>
+  <footer>Cloud-Based Digital Certificate Issuance and Verification System</footer>
+</body>
+</html>

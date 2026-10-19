@@ -1,0 +1,5 @@
+# Copy to organizations.auto.tfvars and replace the example Cognito subject.
+# Keep the real subject-to-organization map private; *.tfvars is Git-ignored.
+admin_organizations = {
+  "replace-with-cognito-subject-uuid" = "org-1"
+}

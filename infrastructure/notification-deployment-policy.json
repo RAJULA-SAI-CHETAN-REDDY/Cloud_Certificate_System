@@ -1,0 +1,15 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["sns:Publish", "sns:CreateTopic", "sns:GetTopicAttributes", "sns:SetTopicAttributes", "sns:DeleteTopic", "sns:ListTagsForResource", "sns:TagResource", "sns:UntagResource", "sns:Subscribe", "sns:ListSubscriptionsByTopic"],
+      "Resource": "arn:aws:sns:ap-south-1:707256068320:ccd-certificate-events"
+    },
+    {
+      "Effect": "Allow",
+      "Action": ["sns:GetSubscriptionAttributes", "sns:SetSubscriptionAttributes", "sns:Unsubscribe"],
+      "Resource": ["arn:aws:sns:ap-south-1:707256068320:ccd-certificate-events", "arn:aws:sns:ap-south-1:707256068320:ccd-certificate-events:*"]
+    }
+  ]
+}
