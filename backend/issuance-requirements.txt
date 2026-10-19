@@ -1,0 +1,5 @@
+reportlab==4.4.10
+qrcode[pil]==8.2
+pillow==11.3.0
+charset-normalizer==3.4.4
+colorama==0.4.6

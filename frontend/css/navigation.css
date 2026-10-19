@@ -1,0 +1,11 @@
+header { flex-wrap: wrap; }
+header nav { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+header nav a { padding: 9px 12px; border-radius: 6px; font-size: 14px; font-weight: 600; letter-spacing: 0; }
+header nav a[aria-current="page"] { background: #e0ece7; color: #18553e; }
+header nav a:hover { background: #edf1ef; }
+.entry-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.entry-options .card { display: flex; flex-direction: column; margin-top: 16px; }
+.entry-options p { line-height: 1.6; }
+.entry-link { display: block; margin-top: auto; padding: 14px 16px; border-radius: 7px; background: #23654d; color: white; text-decoration: none; font-weight: 650; }
+.entry-link span { float: right; background: none; color: inherit; padding: 0; }
+@media (max-width: 620px) { .entry-options { grid-template-columns: 1fr; gap: 8px; } header nav { gap: 2px; } header nav a { padding: 9px 8px; } }
