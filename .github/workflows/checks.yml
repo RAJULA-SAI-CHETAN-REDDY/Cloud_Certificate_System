@@ -1,0 +1,57 @@
+name: Project checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CCD_TEST_PYTHON: python
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: '1.16.0'
+          terraform_wrapper: false
+
+      - name: Install Python dependencies
+        run: python -m pip install -r backend/requirements.txt
+      - name: Run Python tests
+        run: python -m unittest discover -s tests -v
+      - name: Build Lambda packages for Terraform validation
+        run: |
+          python backend/package_verification.py
+          python backend/package_issuance.py
+
+      - name: Install frontend dependencies
+        run: npm ci --ignore-scripts
+        working-directory: frontend
+      - name: Build frontend
+        run: npm run build
+        working-directory: frontend
+      - name: Install test browser
+        run: npx playwright install --with-deps chromium
+        working-directory: frontend
+      - name: Run browser tests
+        run: npm test
+        working-directory: frontend
+
+      - name: Initialize Terraform without a backend
+        run: terraform -chdir=infrastructure init -backend=false -input=false -lockfile=readonly
+      - name: Validate Terraform
+        run: terraform -chdir=infrastructure validate

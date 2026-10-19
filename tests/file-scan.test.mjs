@@ -1,25 +1,25 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { readFile } from "node:fs/promises";
+import { mkdir, readFile } from "node:fs/promises";
 import { before, after, test } from "node:test";
 import { createRequire } from "node:module";
 import { spawn, execFileSync } from "node:child_process";
-import { fileURLToPath } from "node:url";
+import { browserOptions, python, root } from "./browser-runtime.mjs";
 
 const require = createRequire(new URL("../frontend/package.json", import.meta.url));
 const { chromium } = require("@playwright/test");
-const root = fileURLToPath(new URL("../", import.meta.url));
 const origin = "http://localhost:8001";
 const id = "CERT-fe669248-fea3-564f-9e01-f9c6211ec503";
 let server, browser;
 
 before(async () => {
-  server = spawn(root + ".venv/Scripts/python.exe", ["backend/local_server.py", "--port", "8001", "--records-dir", "output/generic-samples"], { cwd: root, windowsHide: true, stdio: "ignore" });
+  await mkdir(root + "tmp", { recursive: true });
+  server = spawn(python, ["backend/local_server.py", "--port", "8001", "--records-dir", "output/generic-samples"], { cwd: root, windowsHide: true, stdio: "ignore" });
   for (let i = 0; i < 50; i++) {
     try { if ((await fetch(origin + "/verify.html")).ok) break; } catch {}
     await new Promise(resolve => setTimeout(resolve, 100));
   }
-  browser = await chromium.launch({ channel: "msedge", headless: true });
+  browser = await chromium.launch(browserOptions);
 });
 
 after(async () => {
@@ -35,7 +35,7 @@ test("original PDF matches while altered bytes do not", async t => {
   const context = await browser.newContext();
   t.after(() => context.close());
   const page = await context.newPage();
-  const original = await readFile(root + "output/generic-samples/" + id + ".pdf");
+  const original = execFileSync(python, ["-c", "from backend.generate_certificate import generate_certificate; import sys; sys.stdout.buffer.write(generate_certificate('CI Demo Student', 'Cloud Computing', 'Organization 1', '2026-10-19', '2027-10-19', 'http://localhost:8000/verify.html', certificate_id='" + id + "')[0])"], { cwd: root });
   const fingerprint = createHash("sha256").update(original).digest("hex");
   await page.route("https://v8wddxhk67.execute-api.ap-south-1.amazonaws.com/dev/verify/**", route => {
     const supplied = new URL(route.request().url()).searchParams.get("sha256");
@@ -62,7 +62,7 @@ test("QR image identifies the record without claiming file authenticity", async 
   await page.route("https://v8wddxhk67.execute-api.ap-south-1.amazonaws.com/dev/verify/**", route => route.fulfill({
     headers: { "Access-Control-Allow-Origin": "*" }, json: { certificate_id: id, status: "ACTIVE" }
   }));
-  const png = execFileSync(root + ".venv/Scripts/python.exe", ["-c", "import io,qrcode,sys; b=io.BytesIO(); qrcode.make('http://localhost:8000/verify.html?id=" + id + "').save(b,format='PNG'); sys.stdout.buffer.write(b.getvalue())"], { cwd: root });
+  const png = execFileSync(python, ["-c", "import io,qrcode,sys; b=io.BytesIO(); qrcode.make('http://localhost:8000/verify.html?id=" + id + "').save(b,format='PNG'); sys.stdout.buffer.write(b.getvalue())"], { cwd: root });
   await page.goto(origin + "/verify.html");
   await page.locator("#scan-file").setInputFiles({ name: "code.png", mimeType: "image/png", buffer: png });
   await page.getByRole("button", { name: "Check file" }).click();
