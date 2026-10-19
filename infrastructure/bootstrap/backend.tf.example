@@ -1,0 +1,10 @@
+# After the bootstrap apply creates the bucket, copy this to backend.tf and
+# run terraform init -migrate-state. backend.tf is ignored by Git.
+terraform {
+  backend "s3" {
+    bucket       = "ccd-terraform-state-707256068320-ap-south-1"
+    key          = "bootstrap/terraform.tfstate"
+    region       = "ap-south-1"
+    use_lockfile = true
+  }
+}

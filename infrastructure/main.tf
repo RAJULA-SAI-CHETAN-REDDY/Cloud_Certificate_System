@@ -10,8 +10,8 @@ terraform {
 }
 
 provider "aws" {
-  region  = "ap-south-1"
-  profile = "ccd"
+  region              = "ap-south-1"
+  allowed_account_ids = ["707256068320"]
 
   default_tags {
     tags = {

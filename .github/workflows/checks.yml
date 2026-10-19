@@ -55,3 +55,7 @@ jobs:
         run: terraform -chdir=infrastructure init -backend=false -input=false -lockfile=readonly
       - name: Validate Terraform
         run: terraform -chdir=infrastructure validate
+      - name: Initialize deployment bootstrap without a backend
+        run: terraform -chdir=infrastructure/bootstrap init -backend=false -input=false -lockfile=readonly
+      - name: Validate deployment bootstrap
+        run: terraform -chdir=infrastructure/bootstrap validate
