@@ -53,7 +53,7 @@ terraform -chdir=infrastructure validate
 For a fresh local browser-test setup, run `npx playwright install chromium`
 from `frontend/` first. The tests use simulated identity and API responses;
 the optional live API smoke test is skipped by default. GitHub Actions runs
-the Python tests, frontend build and browser tests, and Terraform validation
+the Python tests, Lambda package builds, frontend build and browser tests, and Terraform validation
 on each pull request and push to `main`, without AWS credentials or deployment.
 The Lambda packages are written under ignored `output/`.
 The issuance package downloads pinned Linux wheels during its build.
