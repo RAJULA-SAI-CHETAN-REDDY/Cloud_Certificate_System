@@ -50,8 +50,12 @@ npm.cmd --prefix frontend test
 terraform -chdir=infrastructure validate
 ```
 
-The browser tests need the Playwright browser installed and use simulated
-identity responses. The Lambda packages are written under ignored `output/`.
+For a fresh local browser-test setup, run `npx playwright install chromium`
+from `frontend/` first. The tests use simulated identity and API responses;
+the optional live API smoke test is skipped by default. GitHub Actions runs
+the Python tests, frontend build and browser tests, and Terraform validation
+on each pull request and push to `main`, without AWS credentials or deployment.
+The Lambda packages are written under ignored `output/`.
 The issuance package downloads pinned Linux wheels during its build.
 
 ## Existing AWS environment

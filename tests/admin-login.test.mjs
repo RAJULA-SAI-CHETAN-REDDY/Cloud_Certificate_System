@@ -1,14 +1,13 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { mkdir, readFile } from "node:fs/promises";
 import { before, after, test } from "node:test";
 import { createRequire } from "node:module";
 import { spawn } from "node:child_process";
-import { fileURLToPath } from "node:url";
 import { generateKeyPair, exportJWK, SignJWT } from "../frontend/node_modules/jose/dist/webapi/index.js";
+import { browserOptions, python, root } from "./browser-runtime.mjs";
 
 const require = createRequire(new URL("../frontend/package.json", import.meta.url));
 const { chromium } = require("@playwright/test");
-const root = fileURLToPath(new URL("../", import.meta.url));
 const origin = "http://localhost:8000";
 const issuer = "https://cognito-idp.ap-south-1.amazonaws.com/ap-south-1_ga4Llp0Ji";
 const domain = "https://ccd-admin-707256068320.auth.ap-south-1.amazoncognito.com";
@@ -19,14 +18,15 @@ let privateKey;
 let publicJwk;
 
 before(async () => {
+  await mkdir(root + "tmp", { recursive: true });
   ({ privateKey, publicKey: publicJwk } = await generateKeyPair("RS256"));
   publicJwk = { ...await exportJWK(publicJwk), kid: "test", alg: "RS256", use: "sig" };
-  server = spawn(root + ".venv/Scripts/python.exe", ["backend/local_server.py"], { cwd: root, windowsHide: true, stdio: "ignore" });
+  server = spawn(python, ["backend/local_server.py"], { cwd: root, windowsHide: true, stdio: "ignore" });
   for (let i = 0; i < 50; i++) {
     try { if ((await fetch(origin + "/admin.html")).ok) break; } catch {}
     await new Promise(resolve => setTimeout(resolve, 100));
   }
-  browser = await chromium.launch({ channel: "msedge", headless: true });
+  browser = await chromium.launch(browserOptions);
 });
 
 after(async () => {
