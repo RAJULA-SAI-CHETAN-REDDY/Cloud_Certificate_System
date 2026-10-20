@@ -1,0 +1,5 @@
+backend/*.py text eol=lf
+frontend/*.html text eol=lf
+frontend/css/*.css text eol=lf
+frontend/src/*.js text eol=lf
+frontend/js/*.js text eol=lf

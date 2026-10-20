@@ -23,6 +23,7 @@ def main():
             for path in sorted(package.rglob("*")):
                 if (path.is_file() and "__pycache__" not in path.parts
                         and path.suffix not in (".pyc", ".exe", ".pyd", ".dll")
+                        and not (path.name == "RECORD" and path.parent.name.endswith(".dist-info"))
                         and path.relative_to(package).parts[0] not in ("bin", "Scripts")):
                     entry = ZipInfo(path.relative_to(package).as_posix(), date_time=(2026, 1, 1, 0, 0, 0))
                     entry.compress_type = ZIP_DEFLATED
