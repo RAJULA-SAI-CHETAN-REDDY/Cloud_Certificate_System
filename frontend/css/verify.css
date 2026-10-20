@@ -28,6 +28,7 @@ input:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid 
 .badge[data-status="REVOKED"], .badge[data-status="ERROR"], .badge[data-status="NOT_FOUND"] { color: #a03535; background: #fce9e7; }
 h2 { margin-bottom: 8px; font-size: 24px; }
 #result-message { color: #536471; line-height: 1.6; }
+.download-link { display: inline-block; margin-top: 22px; padding: 12px 16px; border-radius: 7px; background: #17324d; color: white; font-size: 14px; font-weight: 650; text-decoration: none; }
 dl { display: grid; grid-template-columns: 150px 1fr; gap: 12px 20px; font-size: 14px; margin-top: 24px; }
 dt { color: #596b77; } dd { margin: 0; overflow-wrap: anywhere; font-weight: 550; }
 [hidden] { display: none !important; }

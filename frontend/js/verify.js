@@ -4,6 +4,7 @@ const input = document.getElementById("certificate-id");
 const button = document.getElementById("verify-button");
 const result = document.getElementById("result");
 const details = document.getElementById("details");
+const download = document.getElementById("certificate-download");
 const states = {
   ACTIVE: ["Valid", "Certificate is valid", "This certificate is recorded and is within its validity dates."],
   EXPIRED: ["Expired", "Certificate has expired", "A matching record exists, but its expiry date has passed."],
@@ -27,6 +28,8 @@ form.addEventListener("submit", async (event) => {
   const id = input.value.trim();
   details.replaceChildren();
   details.hidden = true;
+  download.hidden = true;
+  download.removeAttribute("href");
   button.disabled = true;
   button.textContent = "Checking…";
   show("LOADING", "Checking certificate", "Please wait while we check the record.", "Checking");
@@ -54,6 +57,8 @@ form.addEventListener("submit", async (event) => {
         details.append(term, value);
       }
       details.hidden = false;
+      download.href = `${apiUrl.replace(/\/$/, "")}/${encodeURIComponent(id)}?download=1`;
+      download.hidden = false;
     }
     history.replaceState(null, "", `/verify.html?id=${encodeURIComponent(id)}`);
   } catch (error) {

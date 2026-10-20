@@ -86,3 +86,25 @@ class LambdaVerificationTests(unittest.TestCase):
         self.assertIs(json.loads(handler.lambda_handler(event, None)["body"])["pdf_match"], False)
         event["queryStringParameters"] = {"sha256": "invalid"}
         self.assertEqual(handler.lambda_handler(event, None)["statusCode"], 400)
+
+    def test_pdf_download_redirect_is_short_lived_and_scoped_to_record(self):
+        bucket = "private-certificates"
+        record = dict(certificate_id=ID, recipient_name="Example", course_name="Course",
+            organization="Organization 1", issue_date="2020-01-01", expiry_date="2027-01-01",
+            status="ACTIVE", s3_bucket=bucket, s3_key=f"certificates/{ID}.pdf")
+        self.table.get_item.return_value = {"Item": record}
+        s3 = Mock()
+        s3.generate_presigned_url.return_value = "https://private.example/signed"
+        event = {**self.event, "queryStringParameters": {"download": "1"}}
+        with patch.object(handler, "_s3", s3), patch.dict(handler.os.environ, {"CERTIFICATE_BUCKET": bucket}):
+            result = handler.lambda_handler(event, None)
+            self.assertEqual(result["statusCode"], 302)
+            self.assertEqual(result["headers"]["Location"], "https://private.example/signed")
+            self.assertEqual(result["headers"]["Cache-Control"], "no-store")
+            self.assertEqual(s3.generate_presigned_url.call_args.kwargs["ExpiresIn"], 300)
+            self.assertEqual(s3.generate_presigned_url.call_args.kwargs["Params"]["Key"], f"certificates/{ID}.pdf")
+            record["retired_at"] = "2026-10-20T00:00:00Z"
+            self.assertEqual(handler.lambda_handler(event, None)["statusCode"], 404)
+            record.pop("retired_at")
+            record["s3_key"] = "certificates/another.pdf"
+            self.assertEqual(handler.lambda_handler(event, None)["statusCode"], 404)

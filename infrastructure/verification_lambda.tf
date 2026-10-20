@@ -28,6 +28,11 @@ resource "aws_iam_role_policy" "verification" {
       },
       {
         Effect   = "Allow"
+        Action   = ["s3:GetObject"]
+        Resource = "${aws_s3_bucket.certificates.arn}/certificates/*"
+      },
+      {
+        Effect   = "Allow"
         Action   = ["logs:CreateLogStream", "logs:PutLogEvents"]
         Resource = "${aws_cloudwatch_log_group.verification.arn}:*"
       }
@@ -48,6 +53,7 @@ resource "aws_lambda_function" "verification" {
   environment {
     variables = {
       CERTIFICATE_TABLE   = aws_dynamodb_table.certificates.name
+      CERTIFICATE_BUCKET  = aws_s3_bucket.certificates.bucket
       ADMIN_ISSUER        = "https://cognito-idp.ap-south-1.amazonaws.com/${aws_cognito_user_pool.admin.id}"
       ADMIN_ORGANIZATIONS = jsonencode(var.admin_organizations)
       ADMIN_CLIENT_ID     = aws_cognito_user_pool_client.admin.id

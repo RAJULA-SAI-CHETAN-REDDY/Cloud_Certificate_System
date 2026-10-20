@@ -4540,6 +4540,10 @@
     verify.href = "./verify.html?id=" + encodeURIComponent(item.certificate_id);
     verify.target = "_blank";
     verify.rel = "noopener noreferrer";
+    const download = document.createElement("a");
+    download.textContent = "Download PDF";
+    download.href = window.CERTIFICATE_CONFIG.verificationApiUrl.replace(/\/$/, "") + "/" + encodeURIComponent(item.certificate_id) + "?download=1";
+    download.setAttribute("aria-label", `Download PDF for ${item.recipient_name}`);
     const button2 = document.createElement("button");
     button2.type = "button";
     button2.className = "secondary";
@@ -4573,7 +4577,7 @@
     });
     const actions = document.createElement("td");
     actions.className = "row-actions";
-    actions.append(verify);
+    actions.append(verify, download);
     if (item.can_manage === true) actions.append(button2);
     else {
       const readOnly = document.createElement("span");
