@@ -27,6 +27,7 @@ def main():
                         and path.relative_to(package).parts[0] not in ("bin", "Scripts")):
                     entry = ZipInfo(path.relative_to(package).as_posix(), date_time=(2026, 1, 1, 0, 0, 0))
                     entry.compress_type = ZIP_DEFLATED
+                    entry.create_system = 3
                     entry.external_attr = 0o644 << 16
                     bundle.writestr(entry, path.read_bytes())
     print(f"Issuance Lambda package ready: {output}")

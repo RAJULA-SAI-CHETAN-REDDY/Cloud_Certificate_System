@@ -10,6 +10,7 @@ def build_package(root: Path, output: Path) -> None:
         for name in ("lambda_verify.py", "verification.py", "admin_auth.py", "organizations.py"):
             entry = ZipInfo(name, date_time=(2026, 1, 1, 0, 0, 0))
             entry.compress_type = ZIP_DEFLATED
+            entry.create_system = 3
             entry.external_attr = 0o644 << 16
             bundle.writestr(entry, (root / "backend" / name).read_bytes())
 
