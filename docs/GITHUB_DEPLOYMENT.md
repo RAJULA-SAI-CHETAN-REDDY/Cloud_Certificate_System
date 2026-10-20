@@ -4,7 +4,8 @@ The existing development and bootstrap Terraform states were migrated to the
 private versioned S3 bucket on 2026-10-20. The manual GitHub workflow is
 active on `main`, and both private environment secrets are set. Plan run
 39379166443 succeeded on 2026-10-20 and proposed 0 additions, 4 in-place
-updates, and 0 deletions. No GitHub apply has run yet.
+updates, and 0 deletions. Apply run 39379741457 then completed those four
+updates with no additions or deletions. The first live GitHub apply is complete.
 
 ## Order of work
 
@@ -29,10 +30,10 @@ updates, and 0 deletions. No GitHub apply has run yet.
 5. With `AWS_PROFILE=ccd`, set the existing notification email input in your
    PowerShell session and inspect a **full** local Terraform plan when doing
    local maintenance. For GitHub, run **plan** first and review the latest
-   changes before each live update. The latest plan proposes updates to both
+   changes before each live update. The first GitHub apply updated both
    Lambda packages and two administrator page files (`admin.html` and
-   `css/admin.css`); the page changes reflect source line endings. Run
-   **apply** with confirmation `DEPLOY` only for an accepted plan.
+   `css/admin.css`); the page changes reflected source line endings. Run
+   **apply** with confirmation `DEPLOY` only for an accepted new plan.
 
 The workflow is manual and runs only from `main` in the `development`
 environment. It checks the existing state before planning and blocks changes

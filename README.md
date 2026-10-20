@@ -75,14 +75,14 @@ of Git and chat.
 
 The existing Terraform state has been migrated to a private, versioned S3
 backend, and the manual GitHub deployment workflow is active on `main`. Its
-`development` environment has the required private secrets. A plan run has
-confirmed the existing state; no GitHub apply has been run yet. Follow
+`development` environment has the required private secrets. The first GitHub
+apply succeeded on 2026-10-20 after confirming the existing state. Follow
 [the GitHub deployment guide](docs/GITHUB_DEPLOYMENT.md) before a live update.
 Do not trigger an apply against an empty or unverified state.
 
 This repository does **not** contain Terraform state. A fresh clone should
-initialize the configured S3 backend
-and verify the existing state before any apply. Do not recreate the deployed
+initialize the configured S3 backend and verify the existing state before any
+apply. Do not recreate the deployed
 resources from an empty state.
 Never use a fresh state to recreate the deployed certificate store or website.
 
