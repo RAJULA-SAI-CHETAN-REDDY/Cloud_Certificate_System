@@ -6,7 +6,9 @@ The source requirements are the three Word documents in [`docs/`](docs/).
 
 The current development site is hosted through CloudFront. The public lookup,
 administrator sign-in and listing, issuance, revocation, PDF comparison, phone
-QR lookup, and issuance/revocation email delivery have been tested. The uploaded
+QR lookup, and issuance/revocation email delivery have been tested. A compact
+certificate table is prepared in this branch and passes browser tests; it has
+not been deployed yet. The uploaded
 PDF hash detects changed bytes when compared with the stored reference; it is
 not proof of issuer identity. Older demonstration PDFs may still contain
 localhost QR links. A newly issued demo PDF was tested with the HTTPS QR link.

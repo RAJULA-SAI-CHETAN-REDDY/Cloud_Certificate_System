@@ -46,7 +46,12 @@
       <p id="list-summary" class="hint" role="status" aria-live="polite">Load certificates to begin.</p>
       <button id="refresh-certificates" type="button">Load certificates</button>
       <p id="management-message" role="status" aria-live="polite"></p>
-      <div id="certificate-list"></div>
+      <div id="certificate-table-scroll" class="certificate-table-scroll" role="region" aria-label="Certificate results" tabindex="0" hidden>
+        <table id="certificate-table">
+          <thead><tr><th scope="col">Recipient</th><th scope="col">Organization</th><th scope="col">Dates</th><th scope="col">Status</th><th scope="col">Certificate ID</th><th scope="col">Actions</th></tr></thead>
+          <tbody id="certificate-list"></tbody>
+        </table>
+      </div>
       <p id="no-matches" hidden>No certificates match these filters. Try another search or clear the filters.</p>
       <button id="next-certificates" type="button" class="secondary" hidden>Load more</button>
     </section>
