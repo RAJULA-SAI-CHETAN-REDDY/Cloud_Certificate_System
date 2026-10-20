@@ -357,7 +357,11 @@ test("other organizations are view-only and organization input is locked", async
   await page.getByRole("button", { name: "Check access" }).click();
   await page.getByRole("button", { name: "Load certificates", exact: true }).click();
   await page.getByText("All pages loaded.", { exact: true }).waitFor();
-  const other = page.locator("article").filter({ has: page.getByRole("heading", { name: "Student 2", exact: true }) });
+  assert.deepEqual(await page.locator("#certificate-table thead th").allTextContents(), [
+    "Recipient", "Organization", "Dates", "Status", "Certificate ID", "Actions"
+  ]);
+  assert.equal(await page.locator("#certificate-list tr").count(), 2);
+  const other = page.locator("#certificate-list tr").filter({ has: page.getByRole("heading", { name: "Student 2", exact: true }) });
   assert.equal(await other.getByRole("button", { name: /Revoke certificate|Retry revocation email/ }).count(), 0);
   assert.equal(await other.getByRole("link", { name: "Verify certificate" }).count(), 1);
   assert.match(await other.textContent(), /View only/);
@@ -370,7 +374,7 @@ test("other organizations are view-only and organization input is locked", async
   await page.getByRole("button", { name: "Clear filters" }).click();
   assert.equal(await page.locator("#certificate-organization").inputValue(), "");
   assert.equal(await page.locator("#manageable-only").isChecked(), false);
-  assert.equal(await page.locator("#certificate-list article").count(), 2);
+  assert.equal(await page.locator("#certificate-list tr").count(), 2);
   await page.locator("#manageable-only").check();
   assert.deepEqual(await page.locator("#certificate-list h3").allTextContents(), ["Student 1"]);
   assert.match(await page.locator(".expiry-warning").textContent(), /Expires in [67] days/);
