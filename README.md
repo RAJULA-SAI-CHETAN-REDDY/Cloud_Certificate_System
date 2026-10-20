@@ -118,8 +118,9 @@ details and status, not PDF downloads or stored hashes.
 ## Synthetic development dataset
 
 [`data/demo_students.csv`](data/demo_students.csv) contains 51 clearly labeled
-demo students, 17 for each organization. The maintenance script creates
-deterministic sample PDFs and metadata under ignored `output/demo-students/`.
+dummy students, 17 for each organization: 42 active, 6 expired, and 3 revoked
+as of 2026-10-20. The maintenance script creates deterministic sample PDFs
+and metadata under ignored `output/demo-students-v2/`.
 It checks every local PDF/hash and refuses to replace differing files or
 existing cloud records. It uses the `ccd-developer` identity for the one-time
 development import, directly stores PDFs and records, and sends **no** SNS
@@ -140,3 +141,15 @@ the prepared sample records once (safe to retry after a partial failure):
 
 This writes 51 durable records and private PDFs to the existing development
 account. It does not change Terraform state or infrastructure.
+
+After confirming the new dataset is visible, preview retirement of the four
+known initial test records, then hide them from the administrator list:
+
+```powershell
+.\.venv\Scripts\python.exe backend/retire_initial_samples.py
+.\.venv\Scripts\python.exe backend/retire_initial_samples.py --apply
+```
+
+Retirement uses exact certificate IDs and names, preserves private PDFs and
+record history, and sends no notification email. Their old public links will
+show revoked. This does not remove other records.
