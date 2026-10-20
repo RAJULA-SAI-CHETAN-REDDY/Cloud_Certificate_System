@@ -1,9 +1,10 @@
 # GitHub deployment for the existing development environment
 
 The existing development and bootstrap Terraform states were migrated to the
-private versioned S3 bucket on 2026-10-20. The GitHub workflow is **not active
-yet**: the private environment secrets and a reviewed pull request are still
-needed. Do not run a GitHub apply before those steps are complete.
+private versioned S3 bucket on 2026-10-20. The manual GitHub workflow is
+active on `main`, and both private environment secrets are set. Plan run
+39379166443 succeeded on 2026-10-20 and proposed 0 additions, 4 in-place
+updates, and 0 deletions. No GitHub apply has run yet.
 
 ## Order of work
 
@@ -21,16 +22,17 @@ needed. Do not run a GitHub apply before those steps are complete.
    hash-verified pre-migration backups remain in ignored `tmp/state-backups`.
    On a fresh clone, `terraform init` connects to the existing remote state;
    do not create a new state or import those resources again.
-4. In GitHub's `development` environment, set private secrets
+4. In GitHub's `development` environment, retain private secrets
    `ADMIN_ORGANIZATIONS_JSON` (the existing administrator subject-to-organization
    JSON mapping) and `NOTIFICATION_EMAIL` (the existing subscriber address).
    Do not paste either value into chat, code, logs, or a pull request.
 5. With `AWS_PROFILE=ccd`, set the existing notification email input in your
-   PowerShell session and inspect a **full** local Terraform plan. A
-   post-migration plan on 2026-10-20 proposed only two Lambda updates: one
-   changed package hash and one environment sensitivity marking. Review any
-   new differences before GitHub deployment. The first GitHub run should
-   be **plan**. Review it, then run **apply** with confirmation `DEPLOY`.
+   PowerShell session and inspect a **full** local Terraform plan when doing
+   local maintenance. For GitHub, run **plan** first and review the latest
+   changes before each live update. The latest plan proposes updates to both
+   Lambda packages and two administrator page files (`admin.html` and
+   `css/admin.css`); the page changes reflect source line endings. Run
+   **apply** with confirmation `DEPLOY` only for an accepted plan.
 
 The workflow is manual and runs only from `main` in the `development`
 environment. It checks the existing state before planning and blocks changes
