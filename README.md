@@ -113,7 +113,11 @@ The public website uses a private frontend bucket and CloudFront origin
 access control. Certificate PDFs use a separate private bucket. CloudWatch
 log retention is 30 days. Administrator APIs require Cognito authentication
 and server-side organization checks. Public verification exposes record
-details and status, not PDF downloads or stored hashes.
+details and status. A person with a valid certificate ID can download its
+original PDF through a five-minute private link; stored hashes and bucket
+locations remain hidden. Retired historical records do not offer downloads.
+A downloaded PDF may belong to an expired or revoked record, so always check
+its current status on the verification page.
 
 ## Synthetic development dataset
 

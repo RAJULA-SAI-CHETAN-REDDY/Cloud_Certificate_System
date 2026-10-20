@@ -364,6 +364,8 @@ test("other organizations are view-only and organization input is locked", async
   const other = page.locator("#certificate-list tr").filter({ has: page.getByRole("heading", { name: "Student 2", exact: true }) });
   assert.equal(await other.getByRole("button", { name: /Revoke certificate|Retry revocation email/ }).count(), 0);
   assert.equal(await other.getByRole("link", { name: "Verify certificate" }).count(), 1);
+  assert.equal(await other.getByRole("link", { name: "Download PDF for Student 2" }).getAttribute("href"),
+    "https://v8wddxhk67.execute-api.ap-south-1.amazonaws.com/dev/verify/CERT-22222222-2222-4222-8222-222222222222?download=1");
   assert.match(await other.textContent(), /View only/);
   assert.equal(await other.locator(".organization-column strong").textContent(), "Organization 2");
   await page.locator("#certificate-organization").selectOption("Organization 2");

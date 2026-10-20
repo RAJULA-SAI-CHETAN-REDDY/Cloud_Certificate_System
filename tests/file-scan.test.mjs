@@ -70,6 +70,26 @@ test("QR image identifies the record without claiming file authenticity", async 
   assert.match(await page.locator("#scan-result").textContent(), /record status ACTIVE/);
 });
 
+test("ID lookup offers a fresh PDF download for an existing record only", async t => {
+  const context = await browser.newContext();
+  t.after(() => context.close());
+  const page = await context.newPage();
+  await page.route("https://v8wddxhk67.execute-api.ap-south-1.amazonaws.com/dev/verify/**", route => route.fulfill({
+    headers: { "Access-Control-Allow-Origin": "*" }, json: {
+      certificate_id: id, recipient_name: "Demo Student", course_name: "Cloud",
+      organization: "Organization 1", issue_date: "2026-10-19", expiry_date: "2027-10-19", status: "ACTIVE"
+    }
+  }));
+  await page.goto(origin + "/verify.html");
+  const download = page.getByRole("link", { name: "Download certificate PDF" });
+  assert.equal(await download.isVisible(), false);
+  await page.locator("#certificate-id").fill(id);
+  await page.getByRole("button", { name: "Verify certificate" }).click();
+  await download.waitFor();
+  assert.equal(await download.getAttribute("href"),
+    `https://v8wddxhk67.execute-api.ap-south-1.amazonaws.com/dev/verify/${id}?download=1`);
+});
+
 test("optional live API smoke check for the existing sample PDF", { skip: !process.env.CCD_LIVE_SCAN_API }, async t => {
   const context = await browser.newContext();
   t.after(() => context.close());
