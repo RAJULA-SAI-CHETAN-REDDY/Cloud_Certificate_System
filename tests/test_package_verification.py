@@ -29,3 +29,4 @@ class VerificationPackageTests(unittest.TestCase):
                 self.assertEqual(archive.namelist(), list(names))
                 self.assertTrue(all(info.date_time == (2026, 1, 1, 0, 0, 0)
                                     for info in archive.infolist()))
+                self.assertTrue(all(info.create_system == 3 for info in archive.infolist()))
