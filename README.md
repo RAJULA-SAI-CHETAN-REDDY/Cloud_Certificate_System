@@ -6,9 +6,8 @@ The source requirements are the three Word documents in [`docs/`](docs/).
 
 The current development site is hosted through CloudFront. The public lookup,
 administrator sign-in and listing, issuance, revocation, PDF comparison, phone
-QR lookup, and issuance/revocation email delivery have been tested. A compact
-certificate table is prepared in this branch and passes browser tests; it has
-not been deployed yet. The uploaded
+QR lookup, and issuance/revocation email delivery have been tested. The
+administrator list now uses a compact certificate table. The uploaded
 PDF hash detects changed bytes when compared with the stored reference; it is
 not proof of issuer identity. Older demonstration PDFs may still contain
 localhost QR links. A newly issued demo PDF was tested with the HTTPS QR link.
@@ -115,3 +114,29 @@ access control. Certificate PDFs use a separate private bucket. CloudWatch
 log retention is 30 days. Administrator APIs require Cognito authentication
 and server-side organization checks. Public verification exposes record
 details and status, not PDF downloads or stored hashes.
+
+## Synthetic development dataset
+
+[`data/demo_students.csv`](data/demo_students.csv) contains 51 clearly labeled
+demo students, 17 for each organization. The maintenance script creates
+deterministic sample PDFs and metadata under ignored `output/demo-students/`.
+It checks every local PDF/hash and refuses to replace differing files or
+existing cloud records. It uses the `ccd-developer` identity for the one-time
+development import, directly stores PDFs and records, and sends **no** SNS
+notification emails. These are sample records, not real student credentials.
+
+From the project root, preview and validate locally:
+
+```powershell
+.\.venv\Scripts\python.exe backend/prepare_demo_dataset.py
+```
+
+After reviewing the CSV and confirming the developer identity above, upload
+the prepared sample records once (safe to retry after a partial failure):
+
+```powershell
+.\.venv\Scripts\python.exe backend/prepare_demo_dataset.py --apply
+```
+
+This writes 51 durable records and private PDFs to the existing development
+account. It does not change Terraform state or infrastructure.
